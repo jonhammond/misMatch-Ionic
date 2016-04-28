@@ -1,4 +1,4 @@
-var game = new Phaser.Game(360, 600, Phaser.AUTO, 'game')
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game')
 
 var PhaserGame = function () {
   this.player = null;
@@ -25,6 +25,8 @@ var PhaserGame = function () {
   this.movingLeft = false;
   this.movingRight = false;
 
+  this.lost = false;
+
 };
 
 PhaserGame.prototype = {
@@ -49,6 +51,7 @@ PhaserGame.prototype = {
     this.load.image('jumpButton', 'assets/waterLevel/redButton.png');
 
     this.load.spritesheet('treasure', 'assets/waterLevel/treasure.png', 56, 39);
+    this.load.spritesheet('scuba', 'assets/waterLevel/scubaMan.png', 100, 70);
     this.load.spritesheet('shark', 'assets/waterLevel/customSharkSheet.png', 200, 98);
     this.load.spritesheet('mario', 'assets/sprites/mariosprite.png', 21, 35);
     this.load.spritesheet('dude', 'assets/sprites/dude.png', 32, 48);
@@ -152,29 +155,27 @@ PhaserGame.prototype = {
     this.jumpButton.fixedToCamera = true;
 
     // Create Player
-    // Mario Sprite
-    // this.player = this.add.sprite(0, 200, 'mario')
-    // this.physics.arcade.enable(this.player);
-    // this.player.body.collideWorldBounds = true;
-    // this.player.body.setSize(20, 20, 5, 16);
-    // this.player.body.gravity.y = 600;
 
     //  Dude Sprite
-    this.player = this.add.sprite(32, 0, 'dude');
+    // this.player = this.add.sprite(32, 0, 'dude');
+    // this.physics.arcade.enable(this.player);
+    // this.player.body.collideWorldBounds = true;
+    // this.player.body.setSize(20, 32, 5, 16);
+    // this.player.animations.add('left', [0, 1, 2, 3], 10, true);
+    // this.player.animations.add('turn', [4], 20, true);
+    // this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+
+    // Scuba Sprite
+    this.player = this.add.sprite(32, 150, 'scuba');
     this.physics.arcade.enable(this.player);
     this.player.body.collideWorldBounds = true;
-    this.player.body.setSize(20, 32, 5, 16);
+    this.player.body.setSize(70, 50, 5, 0);
     this.player.animations.add('left', [0, 1, 2, 3], 10, true);
     this.player.animations.add('turn', [4], 20, true);
-    this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+    this.player.animations.add('right', [4, 5, 6, 7], 10, true);
 
     //camera follows player
     this.camera.follow(this.player)
-
-    // Player directional animations
-    this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-    this.player.animations.add('turn', [4], 20, true);
-    this.player.animations.add('right', [7, 8, 9, 10, 11], 10, true);
 
     // Player Health and Treasure indicator
     this.playerHealthText = game.add.text(16, 48, 'Health: 100', {
@@ -309,6 +310,7 @@ PhaserGame.prototype = {
     game.physics.arcade.overlap(this.player, this.shark, sharkBite, null, this);
     game.physics.arcade.overlap(this.player, this.shark2, lowerHealth, null, this);
     game.physics.arcade.overlap(this.player, this.shark2, shark2Bite, null, this);
+
     game.physics.arcade.overlap(this.player, this.treasure, this.Win, null, this);
 
     // Function: Animate shark1 bite
@@ -317,7 +319,6 @@ PhaserGame.prototype = {
         {this.shark.play('rightBite')}
       if (this.shark.animations.currentAnim.name === "left")
         {this.shark.play('leftBite')}
-      // console.log(this.shark.animations.currentAnim.name)
       this.player.body.velocity.y = -200;
     }
 
@@ -327,7 +328,6 @@ PhaserGame.prototype = {
         {this.shark2.play('rightBite')}
       if (this.shark2.animations.currentAnim.name === "left")
         {this.shark2.play('leftBite')}
-      // console.log(this.shark.animations.currentAnim.name)
       this.player.body.velocity.y = -200;
     }
 
@@ -337,20 +337,25 @@ PhaserGame.prototype = {
       this.playerHealthText.text = 'Health:' + this.playerHealth
       if (this.playerHealth === 0) {
         player.kill()
+        this.lost = true;
       }
-    }
-
-    // Function: Collect treasure
-    function collectTreasure(player, treasure) {
-      treasure.kill()
     }
 
     // Add bubbles
     Bubble();
 
+    // End game if player dead
+    if (this.lost) {
+      this.Lose();
+    }
+
   },   //end of update
   Win: function () {
     game.state.start('win');
+  },
+  Lose: function () {
+    console.log("lost");
+    game.state.start('lose');
   }
 }
 
@@ -365,10 +370,8 @@ moveLeft = function() {
   this.movingRight = false;
   this.movingLeft = true;
 }
-
 moveUp = function() {
   this.player.body.velocity.y = -350;
-  console.log('jump')
 }
 
 jumpCheck = function () {
@@ -474,3 +477,4 @@ MovingPlatform.prototype.stop = function () {
 // Call game
 game.state.add('Game', PhaserGame, true);
 game.state.add('win', winState)
+game.state.add('lose', loseState)
