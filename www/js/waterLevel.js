@@ -1,7 +1,7 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game')
+var game = new Phaser.Game(360, 600, Phaser.AUTO, 'game')
 
 var PhaserGame = function () {
-  this.player = null;
+  // this.player = null;
   this.ground = null;
   this.cursors;
   this.playerHealth = 100;

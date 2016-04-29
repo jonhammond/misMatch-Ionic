@@ -1,3 +1,12 @@
+@import url(https://fonts.googleapis.com/css?family=Press+Start+2P);
+
 body {
     padding: 0;
+}
+
+.title {
+  text-align: center;
+  width: 360px;
+  /*color: rgb(6, 46, 138);*/
+  font-family:  'Press Start 2P', fantasy;
 }

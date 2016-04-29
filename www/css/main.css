@@ -3,6 +3,7 @@ body {
     font-size: 100%;
     padding: 0;
     background: #000;
+    width: 360px;
 }
 
 .headerContainer {
@@ -12,7 +13,6 @@ body {
     position: absolute;
     top: 25%;
     text-align: center;
-    left: 25%;
     /*top: 0;*/
     /*left: 0;*/
     /*bottom: 0;*/
@@ -20,12 +20,12 @@ body {
 }
 
 .headerContainer h1 {
-    font-size: 4rem;
+    font-size: 1.7rem;
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
 .headerContainer p {
-    font-size: 1.7rem;
+    font-size: 1rem;
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
@@ -37,3 +37,15 @@ body {
     border-radius: 50%;
 }
 
+.gameWindow {
+  text-align: center;
+  overflow-y: auto;
+  width: 300px;
+}
+
+.appBar {
+  font-size: 1rem;
+  font-family: 'Press Start 2P', cursive;
+  text-align: center;
+  margin: 0 auto;
+}
